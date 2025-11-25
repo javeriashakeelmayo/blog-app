@@ -9,32 +9,36 @@
     <h1 class="mb-4">All Blogs</h1>
 
     <div class="mb-3">
-        <a href="{% url 'add_blog' %}" class="btn btn-primary me-2">Add Author</a>
+        <a href="{% url 'add_blog' %}" class="btn btn-primary me-2">Add Blog</a>
         <a href="{% url 'add_post' %}" class="btn btn-success">Add New Post</a>
     </div>
 
     <hr>
 
-    <h2>List of all Blogs</h2>
+    {% if blogs %}
+        {% for blog in blogs %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ blog.name }}</h5>
 
-    {% for blog in blogs %}
-        <div class="card mb-3 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">{{ blog.name }}</h5>
-                <ul class="list-group list-group-flush mt-2">
-                    {% for post in blog.posts.all %}
-                        <li class="list-group-item">
-                            <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
-                        </li>
-                    {% empty %}
-                        <li class="list-group-item">No posts yet.</li>
-                    {% endfor %}
-                </ul>
+                    {% if blog.posts.exists %}
+                        <ul class="list-group list-group-flush mt-2">
+                            {% for post in blog.posts.all %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="mt-2">No posts yet.</p>
+                    {% endif %}
+
+                </div>
             </div>
-        </div>
-    {% empty %}
+        {% endfor %}
+    {% else %}
         <p>No blogs available.</p>
-    {% endfor %}
+    {% endif %}
 </div>
 </body>
 </html>
